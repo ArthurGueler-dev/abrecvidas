@@ -6,13 +6,11 @@ export default function Layout({ children }) {
   const [sidebarAberta, setSidebarAberta] = useState(false);
 
   return (
-    <div className="min-h-screen bg-neutral-50">
-      <Header onToggleSidebar={() => setSidebarAberta((v) => !v)} />
+    <div className="min-h-screen bg-slate-50">
       <Sidebar aberta={sidebarAberta} onFechar={() => setSidebarAberta(false)} />
-
-      {/* Conteúdo principal */}
-      <main className="pt-16 lg:pl-64 min-h-screen">
-        <div className="p-6 lg:p-8">
+      <Header onToggleSidebar={() => setSidebarAberta((v) => !v)} />
+      <main className="pt-16 lg:pl-60 min-h-screen">
+        <div className="p-6 max-w-7xl mx-auto">
           {children}
         </div>
       </main>

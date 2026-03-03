@@ -1,116 +1,90 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import {
+  LayoutDashboard, Users, UserPlus, ClipboardList,
+  FileText, Settings, LogOut, ShieldCheck,
+} from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const itensMenu = [
-  {
-    label: 'Dashboard',
-    href: '/dashboard',
-    icone: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-      </svg>
-    ),
-    perfis: ['admin', 'profissional', 'visualizador'],
-  },
-  {
-    label: 'Acolhidos',
-    href: '/acolhidos',
-    icone: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-      </svg>
-    ),
-    perfis: ['admin', 'profissional', 'visualizador'],
-  },
-  {
-    label: 'Usuários',
-    href: '/usuarios',
-    icone: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-      </svg>
-    ),
-    perfis: ['admin'],
-  },
+  { label: 'Dashboard',      href: '/dashboard',   icone: LayoutDashboard, perfis: ['admin','profissional','visualizador'] },
+  { label: 'Acolhidos',      href: '/acolhidos',   icone: Users,           perfis: ['admin','profissional','visualizador'] },
+  { label: 'Novo Cadastro',  href: '/acolhidos/novo', icone: UserPlus,     perfis: ['admin','profissional'] },
+  { label: 'Evoluções',      href: '/evolucoes',   icone: ClipboardList,   perfis: ['admin','profissional'] },
+  { label: 'Relatórios',     href: '/relatorios',  icone: FileText,        perfis: ['admin','profissional','visualizador'] },
+  { label: 'Usuários',       href: '/usuarios',    icone: ShieldCheck,     perfis: ['admin'] },
+  { label: 'Configurações',  href: '/configuracoes', icone: Settings,      perfis: ['admin'] },
 ];
 
 export default function Sidebar({ aberta, onFechar }) {
   const { usuario, logout } = useAuth();
   const navigate = useNavigate();
+  const menu = itensMenu.filter((i) => i.perfis.includes(usuario?.perfil));
 
-  const menuFiltrado = itensMenu.filter((item) =>
-    item.perfis.includes(usuario?.perfil)
-  );
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
+  const handleLogout = () => { logout(); navigate('/login'); };
 
   return (
     <>
-      {/* Overlay mobile */}
       {aberta && (
-        <div
-          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
-          onClick={onFechar}
-        />
+        <div className="fixed inset-0 bg-black/40 z-30 lg:hidden" onClick={onFechar} />
       )}
 
-      {/* Sidebar */}
-      <aside
-        className={`
-          fixed top-0 left-0 h-full w-64 bg-neutral-900 z-40 flex flex-col
-          transition-transform duration-300
-          ${aberta ? 'translate-x-0' : '-translate-x-full'}
-          lg:translate-x-0 lg:top-16 lg:h-[calc(100vh-4rem)]
-        `}
-      >
-        {/* Header mobile */}
-        <div className="flex items-center justify-between px-4 h-16 border-b border-neutral-700 lg:hidden">
-          <span className="text-white font-bold">Menu</span>
-          <button className="text-neutral-400 hover:text-white" onClick={onFechar}>
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+      <aside className={`
+        fixed top-0 left-0 h-full w-60 z-40 flex flex-col
+        bg-[#1E3A8A] transition-transform duration-300
+        ${aberta ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:top-0
+      `}>
+        {/* Logo */}
+        <div className="flex items-center gap-3 px-5 h-16 border-b border-white/10 shrink-0">
+          <img src="/logo.png" alt="ABREC" className="h-9 w-9 object-contain rounded-full bg-white/10 p-0.5" />
+          <div>
+            <p className="text-white font-bold text-sm leading-tight">ABREC</p>
+            <p className="text-blue-300 text-[10px]">SIGA</p>
+          </div>
+          <button className="ml-auto text-blue-300 hover:text-white lg:hidden" onClick={onFechar}>✕</button>
         </div>
 
-        {/* Itens de navegação */}
+        {/* Nav */}
         <nav className="flex-1 px-3 py-4 overflow-y-auto">
-          <ul className="space-y-1">
-            {menuFiltrado.map((item) => (
-              <li key={item.href}>
+          <ul className="space-y-0.5">
+            {menu.map(({ label, href, icone: Icon }) => (
+              <li key={href}>
                 <NavLink
-                  to={item.href}
+                  to={href}
                   onClick={onFechar}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                    `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                       isActive
-                        ? 'bg-blue-600 text-white'
-                        : 'text-neutral-300 hover:bg-neutral-800 hover:text-white'
+                        ? 'bg-teal-500 text-white'
+                        : 'text-blue-200 hover:bg-white/10 hover:text-white'
                     }`
                   }
                 >
-                  {item.icone}
-                  {item.label}
+                  <Icon size={17} />
+                  {label}
                 </NavLink>
               </li>
             ))}
           </ul>
         </nav>
 
-        {/* Rodapé - Logout */}
-        <div className="px-3 py-4 border-t border-neutral-700">
+        {/* Usuário + logout */}
+        <div className="px-3 py-4 border-t border-white/10 shrink-0">
+          <div className="flex items-center gap-2.5 px-3 py-2 mb-1">
+            <div className="w-8 h-8 rounded-full bg-teal-500 flex items-center justify-center text-white font-bold text-sm shrink-0">
+              {usuario?.nome?.[0]?.toUpperCase()}
+            </div>
+            <div className="min-w-0">
+              <p className="text-white text-xs font-semibold truncate">{usuario?.nome}</p>
+              <p className="text-blue-300 text-[10px] capitalize">{usuario?.perfil}</p>
+            </div>
+          </div>
           <button
-            className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-sm font-medium text-neutral-300 hover:bg-neutral-800 hover:text-red-400 transition-colors"
             onClick={handleLogout}
+            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-blue-200 hover:bg-red-500/20 hover:text-red-300 transition-colors"
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-            Sair do Sistema
+            <LogOut size={17} />
+            Sair do sistema
           </button>
         </div>
       </aside>
