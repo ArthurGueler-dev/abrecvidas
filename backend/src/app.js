@@ -6,8 +6,21 @@ const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
+const origensPermitidas = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://abrecvidas.vercel.app',
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    if (!origin || origensPermitidas.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS: origem não permitida'));
+    }
+  },
   credentials: true,
 }));
 
