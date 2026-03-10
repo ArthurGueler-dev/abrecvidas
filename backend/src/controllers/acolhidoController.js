@@ -26,6 +26,9 @@ const listarAcolhidos = async (req, res, next) => {
       params
     );
 
+    const limitInt  = parseInt(limit,  10) || 10;
+    const offsetInt = parseInt(offset, 10) || 0;
+
     const [acolhidos] = await pool.execute(
       `SELECT a.id, a.nome, a.cpf, a.telefone, a.email, a.status,
               a.data_admissao, a.foto_url, a.cidade, a.estado,
@@ -34,8 +37,8 @@ const listarAcolhidos = async (req, res, next) => {
        LEFT JOIN usuarios u ON u.id = a.criado_por
        ${where}
        ORDER BY a.data_admissao DESC
-       LIMIT ? OFFSET ?`,
-      [...params, Number(limit), offset]
+       LIMIT ${limitInt} OFFSET ${offsetInt}`,
+      params
     );
 
     res.json({
