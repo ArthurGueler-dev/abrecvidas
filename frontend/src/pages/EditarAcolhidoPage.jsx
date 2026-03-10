@@ -15,9 +15,19 @@ export default function EditarAcolhidoPage() {
   const navigate                = useNavigate();
   const { toasts, toast }       = useToast();
 
+  const toDate = (v) => v ? v.toString().slice(0, 10) : '';
+
   useEffect(() => {
     api.get(`/acolhidos/${id}`)
-      .then(({ data }) => setAcolhido(data.dados))
+      .then(({ data }) => {
+        const d = data.dados;
+        setAcolhido({
+          ...d,
+          data_nascimento: toDate(d.data_nascimento),
+          data_admissao:   toDate(d.data_admissao),
+          data_alta:       toDate(d.data_alta),
+        });
+      })
       .catch(() => { toast('Acolhido não encontrado', 'error'); navigate('/acolhidos'); })
       .finally(() => setBuscando(false));
   }, [id]);
