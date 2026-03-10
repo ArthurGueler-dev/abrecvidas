@@ -1,51 +1,51 @@
-/**
- * Valida CPF brasileiro.
- * @param {string} cpf
- * @returns {boolean}
- */
 const validarCPF = (cpf) => {
-  const limpo = cpf.replace(/\D/g, '');
-  if (limpo.length !== 11 || /^(\d)\1+$/.test(limpo)) return false;
+  cpf = cpf.replace(/[^\d]/g, '');
+  if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
 
   let soma = 0;
-  for (let i = 0; i < 9; i++) soma += parseInt(limpo[i]) * (10 - i);
+  for (let i = 1; i <= 9; i++) soma += parseInt(cpf[i - 1]) * (11 - i);
   let resto = (soma * 10) % 11;
   if (resto === 10 || resto === 11) resto = 0;
-  if (resto !== parseInt(limpo[9])) return false;
+  if (resto !== parseInt(cpf[9])) return false;
 
   soma = 0;
-  for (let i = 0; i < 10; i++) soma += parseInt(limpo[i]) * (11 - i);
+  for (let i = 1; i <= 10; i++) soma += parseInt(cpf[i - 1]) * (12 - i);
   resto = (soma * 10) % 11;
   if (resto === 10 || resto === 11) resto = 0;
-  return resto === parseInt(limpo[10]);
+  return resto === parseInt(cpf[10]);
 };
 
-/**
- * Formata CPF: 000.000.000-00
- * @param {string} cpf
- * @returns {string}
- */
-const formatarCPF = (cpf) => {
-  const limpo = cpf.replace(/\D/g, '');
-  return limpo.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+const validarRG = (rg) => {
+  return /^\d{1,3}\.?\d{3}\.?\d{3}-?\d{1}$/.test(rg.replace(/\s/g, ''));
 };
 
-/**
- * Valida email.
- * @param {string} email
- * @returns {boolean}
- */
 const validarEmail = (email) => {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 };
 
-/**
- * Valida força da senha (mínimo 8 caracteres).
- * @param {string} senha
- * @returns {boolean}
- */
 const validarSenha = (senha) => {
   return typeof senha === 'string' && senha.length >= 8;
 };
 
-module.exports = { validarCPF, formatarCPF, validarEmail, validarSenha };
+const formatarCPF = (cpf) => {
+  cpf = cpf.replace(/[^\d]/g, '');
+  return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+};
+
+const formatarRG = (rg) => {
+  rg = rg.replace(/[^\d]/g, '');
+  return rg.replace(/(\d{1,3})(\d{3})(\d{3})(\d{1})/, '$1.$2.$3-$4');
+};
+
+const calcularIdade = (dataNascimento) => {
+  const hoje = new Date();
+  const nasc = new Date(dataNascimento);
+  let idade = hoje.getFullYear() - nasc.getFullYear();
+  if (hoje.getMonth() < nasc.getMonth() ||
+     (hoje.getMonth() === nasc.getMonth() && hoje.getDate() < nasc.getDate())) {
+    idade--;
+  }
+  return idade;
+};
+
+module.exports = { validarCPF, validarRG, validarEmail, validarSenha, formatarCPF, formatarRG, calcularIdade };

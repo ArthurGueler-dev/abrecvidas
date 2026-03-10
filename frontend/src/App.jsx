@@ -4,84 +4,45 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import Layout from './components/Layout';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
+import AcolhidosPage from './pages/AcolhidosPage';
+import NovoAcolhidoPage from './pages/NovoAcolhidoPage';
+import EditarAcolhidoPage from './pages/EditarAcolhidoPage';
+import DetalhesAcolhidoPage from './pages/DetalhesAcolhidoPage';
 import NotFoundPage from './pages/NotFoundPage';
 
-// Rota protegida: redireciona para /login se não autenticado
 const RotaProtegida = ({ children }) => {
   const { token, inicializando } = useAuth();
-
-  if (inicializando) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-neutral-50">
-        <div className="text-center">
-          <svg className="animate-spin h-10 w-10 text-blue-600 mx-auto mb-3" viewBox="0 0 24 24" fill="none">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-          </svg>
-          <p className="text-neutral-500">Carregando...</p>
-        </div>
-      </div>
-    );
-  }
-
+  if (inicializando) return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="animate-spin w-10 h-10 border-2 border-teal-500 border-t-transparent rounded-full" />
+    </div>
+  );
   return token ? children : <Navigate to="/login" replace />;
 };
 
-// Rota pública: redireciona para /dashboard se já autenticado
 const RotaPublica = ({ children }) => {
   const { token, inicializando } = useAuth();
   if (inicializando) return null;
   return token ? <Navigate to="/dashboard" replace /> : children;
 };
 
+const Pagina = ({ children }) => (
+  <RotaProtegida><Layout>{children}</Layout></RotaProtegida>
+);
+
 function AppRoutes() {
   return (
     <Routes>
-      <Route
-        path="/login"
-        element={
-          <RotaPublica>
-            <LoginPage />
-          </RotaPublica>
-        }
-      />
-      <Route
-        path="/dashboard"
-        element={
-          <RotaProtegida>
-            <Layout>
-              <DashboardPage />
-            </Layout>
-          </RotaProtegida>
-        }
-      />
-      {/* Sprint 3+ */}
-      <Route
-        path="/acolhidos"
-        element={
-          <RotaProtegida>
-            <Layout>
-              <div className="card">
-                <h1 className="text-2xl font-bold text-neutral-900 mb-2">Acolhidos</h1>
-                <p className="text-neutral-500">Módulo disponível na Sprint 3.</p>
-              </div>
-            </Layout>
-          </RotaProtegida>
-        }
-      />
-      <Route
-        path="/usuarios"
-        element={
-          <RotaProtegida>
-            <Layout>
-              <div className="card">
-                <h1 className="text-2xl font-bold text-neutral-900 mb-2">Usuários</h1>
-                <p className="text-neutral-500">Módulo disponível na Sprint 3.</p>
-              </div>
-            </Layout>
-          </RotaProtegida>
-        }
-      />
+      <Route path="/login" element={<RotaPublica><LoginPage /></RotaPublica>} />
+      <Route path="/dashboard" element={<Pagina><DashboardPage /></Pagina>} />
+      <Route path="/acolhidos" element={<Pagina><AcolhidosPage /></Pagina>} />
+      <Route path="/acolhidos/novo" element={<Pagina><NovoAcolhidoPage /></Pagina>} />
+      <Route path="/acolhidos/:id" element={<Pagina><DetalhesAcolhidoPage /></Pagina>} />
+      <Route path="/acolhidos/:id/editar" element={<Pagina><EditarAcolhidoPage /></Pagina>} />
+      <Route path="/evolucoes" element={<Pagina><div className="card-p"><h1 className="text-xl font-bold text-gray-900 mb-2">Evoluções</h1><p className="text-gray-500 text-sm">Disponível na Sprint 5.</p></div></Pagina>} />
+      <Route path="/relatorios" element={<Pagina><div className="card-p"><h1 className="text-xl font-bold text-gray-900 mb-2">Relatórios</h1><p className="text-gray-500 text-sm">Disponível na Sprint 7.</p></div></Pagina>} />
+      <Route path="/usuarios" element={<Pagina><div className="card-p"><h1 className="text-xl font-bold text-gray-900 mb-2">Usuários</h1><p className="text-gray-500 text-sm">Disponível em breve.</p></div></Pagina>} />
+      <Route path="/configuracoes" element={<Pagina><div className="card-p"><h1 className="text-xl font-bold text-gray-900 mb-2">Configurações</h1><p className="text-gray-500 text-sm">Disponível em breve.</p></div></Pagina>} />
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
