@@ -77,8 +77,21 @@ export default function FormAcolhido({ acolhido = null, onSubmit, loading, erros
     } catch { /* ignora */ }
   };
 
+  const camposOpcionais = [
+    'rg', 'data_nascimento', 'estado_civil', 'telefone_secundario',
+    'email', 'endereco', 'cep', 'cidade', 'estado', 'data_alta',
+  ];
+
+  const limpar = (d) => {
+    const copia = { ...d };
+    camposOpcionais.forEach((k) => {
+      if (copia[k] === '' || copia[k] === undefined) copia[k] = null;
+    });
+    return copia;
+  };
+
   return (
-    <form onSubmit={(e) => { e.preventDefault(); onSubmit(dados); }} className="space-y-6">
+    <form onSubmit={(e) => { e.preventDefault(); onSubmit(limpar(dados)); }} className="space-y-6">
 
       {/* Dados Pessoais */}
       <div className="card-p">
