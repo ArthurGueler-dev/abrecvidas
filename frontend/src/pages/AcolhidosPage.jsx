@@ -144,7 +144,7 @@ export default function AcolhidosPage() {
                       <td className="px-4 py-3 text-gray-600 hidden md:table-cell font-mono">{a.cpf}</td>
                       <td className="px-4 py-3 text-gray-600 hidden lg:table-cell">{a.telefone}</td>
                       <td className="px-4 py-3 text-gray-600 hidden lg:table-cell">
-                        {a.data_admissao ? new Date(a.data_admissao).toLocaleDateString('pt-BR') : '—'}
+                        {a.data_admissao ? new Date(a.data_admissao.toString().slice(0,10) + 'T12:00:00').toLocaleDateString('pt-BR') : '—'}
                       </td>
                       <td className="px-4 py-3">
                         <span className={STATUS_BADGE[a.status] || 'badge badge-gray'}>{a.status}</span>

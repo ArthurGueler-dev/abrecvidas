@@ -8,8 +8,8 @@ import { useAuth } from '../context/AuthContext';
 
 const itensMenu = [
   { label: 'Dashboard',      href: '/dashboard',   icone: LayoutDashboard, perfis: ['admin','profissional','visualizador'] },
-  { label: 'Acolhidos',      href: '/acolhidos',   icone: Users,           perfis: ['admin','profissional','visualizador'] },
-  { label: 'Novo Cadastro',  href: '/acolhidos/novo', icone: UserPlus,     perfis: ['admin','profissional'] },
+  { label: 'Acolhidos',      href: '/acolhidos',      icone: Users,     perfis: ['admin','profissional','visualizador'], end: true },
+  { label: 'Novo Cadastro',  href: '/acolhidos/novo', icone: UserPlus,  perfis: ['admin','profissional'] },
   { label: 'Evoluções',      href: '/evolucoes',   icone: ClipboardList,   perfis: ['admin','profissional'] },
   { label: 'Relatórios',     href: '/relatorios',  icone: FileText,        perfis: ['admin','profissional','visualizador'] },
   { label: 'Usuários',       href: '/usuarios',    icone: ShieldCheck,     perfis: ['admin'] },
@@ -47,10 +47,11 @@ export default function Sidebar({ aberta, onFechar }) {
         {/* Nav */}
         <nav className="flex-1 px-3 py-4 overflow-y-auto">
           <ul className="space-y-0.5">
-            {menu.map(({ label, href, icone: Icon }) => (
+            {menu.map(({ label, href, icone: Icon, end }) => (
               <li key={href}>
                 <NavLink
                   to={href}
+                  end={end}
                   onClick={onFechar}
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
