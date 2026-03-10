@@ -29,6 +29,14 @@ function formatarTelefoneInput(valor) {
   return n.replace(/(\d{2})(\d{5})(\d{0,4})/, (_, a, b, c) => c ? `(${a}) ${b}-${c}` : b ? `(${a}) ${b}` : a);
 }
 
+function formatarRGInput(valor) {
+  const n = valor.replace(/\D/g, '').slice(0, 9);
+  if (n.length <= 2) return n;
+  if (n.length <= 5) return n.replace(/(\d{2})(\d+)/, '$1.$2');
+  if (n.length <= 8) return n.replace(/(\d{2})(\d{3})(\d+)/, '$1.$2.$3');
+  return n.replace(/(\d{2})(\d{3})(\d{3})(\d{1})/, '$1.$2.$3-$4');
+}
+
 function formatarCEP(valor) {
   const n = valor.replace(/\D/g, '').slice(0, 8);
   return n.replace(/(\d{5})(\d{0,3})/, (_, a, b) => b ? `${a}-${b}` : a);
@@ -46,6 +54,7 @@ export default function FormAcolhido({ acolhido = null, onSubmit, loading, erros
   const set = (campo) => (e) => {
     let valor = e.target.value;
     if (campo === 'cpf') valor = formatarCPFInput(valor);
+    if (campo === 'rg') valor = formatarRGInput(valor);
     if (campo === 'telefone' || campo === 'telefone_secundario') valor = formatarTelefoneInput(valor);
     if (campo === 'cep') valor = formatarCEP(valor);
     setDados((prev) => ({ ...prev, [campo]: valor }));
