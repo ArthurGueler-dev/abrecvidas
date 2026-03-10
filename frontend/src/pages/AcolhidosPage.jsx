@@ -14,7 +14,11 @@ const STATUS_BADGE = {
 };
 
 function Avatar({ foto, nome }) {
-  if (foto) return <img src={foto} alt={nome} className="w-9 h-9 rounded-full object-cover" />;
+  if (foto) return (
+    <div className="w-9 h-9 rounded-full overflow-hidden shrink-0">
+      <img src={foto} alt={nome} className="w-full h-full object-cover" />
+    </div>
+  );
   return (
     <div className="w-9 h-9 rounded-full bg-[#1E3A8A]/10 flex items-center justify-center text-[#1E3A8A] font-bold text-sm">
       {nome?.[0]?.toUpperCase()}
