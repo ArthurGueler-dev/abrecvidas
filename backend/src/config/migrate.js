@@ -18,7 +18,7 @@ const SQL = `
     cep VARCHAR(10),
     cidade VARCHAR(100),
     estado VARCHAR(2),
-    data_admissao DATE NOT NULL DEFAULT (CURDATE()),
+    data_admissao DATE NOT NULL,
     data_alta DATE,
     status ENUM('ativo','inativo','alta') DEFAULT 'ativo',
     foto_url VARCHAR(500),
@@ -47,17 +47,22 @@ const SQL = `
 `;
 
 async function migrar() {
+  const conn = await pool.getConnection();
   try {
-    const conn = await pool.getConnection();
     const queries = SQL.split(';').map(q => q.trim()).filter(q => q.length > 0);
     for (const q of queries) {
       await conn.execute(q);
     }
-    conn.release();
+    const [[{ tabelas }]] = await conn.execute(
+      "SELECT COUNT(*) as tabelas FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = 'acolhidos'"
+    );
+    if (tabelas === 0) throw new Error('Tabela acolhidos não foi criada');
     console.log('✅ Migração Sprint 3 concluída');
   } catch (err) {
     console.error('❌ Erro na migração:', err.message);
     throw err;
+  } finally {
+    conn.release();
   }
 }
 
