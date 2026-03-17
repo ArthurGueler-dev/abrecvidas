@@ -5,6 +5,13 @@ const {
   atualizarAcolhido, deletarAcolhido,
   uploadFotoAcolhido, deletarFotoAcolhido,
 } = require('../controllers/acolhidoController');
+const {
+  listarFamilia, criarFamiliar, atualizarFamiliar, deletarFamiliar,
+  obterSaude, salvarSaude,
+  obterSubstancias, salvarSubstancias,
+  obterHistoricoProfissional, salvarHistoricoProfissional,
+  listarAvaliacoes, criarAvaliacao, atualizarAvaliacao, deletarAvaliacao,
+} = require('../controllers/complementarController');
 const { authMiddleware, requirePerfil } = require('../middleware/auth');
 
 const router = express.Router();
@@ -31,5 +38,27 @@ router.delete('/:id', requirePerfil(['admin']), deletarAcolhido);
 
 router.post('/:id/foto',   upload.single('file'), uploadFotoAcolhido);
 router.delete('/:id/foto', deletarFotoAcolhido);
+
+// Sprint 4 — Informações complementares
+const rw = requirePerfil(['admin', 'profissional']);
+
+router.get   ('/:id/familia',                  listarFamilia);
+router.post  ('/:id/familia',             rw,  criarFamiliar);
+router.put   ('/:id/familia/:familiarId', rw,  atualizarFamiliar);
+router.delete('/:id/familia/:familiarId', rw,  deletarFamiliar);
+
+router.get('/:id/saude',       obterSaude);
+router.put('/:id/saude', rw,   salvarSaude);
+
+router.get('/:id/substancias',       obterSubstancias);
+router.put('/:id/substancias', rw,   salvarSubstancias);
+
+router.get('/:id/historico-profissional',       obterHistoricoProfissional);
+router.put('/:id/historico-profissional', rw,   salvarHistoricoProfissional);
+
+router.get   ('/:id/avaliacoes',                    listarAvaliacoes);
+router.post  ('/:id/avaliacoes',              rw,   criarAvaliacao);
+router.put   ('/:id/avaliacoes/:avaliacaoId', rw,   atualizarAvaliacao);
+router.delete('/:id/avaliacoes/:avaliacaoId', rw,   deletarAvaliacao);
 
 module.exports = router;
