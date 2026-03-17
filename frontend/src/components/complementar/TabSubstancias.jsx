@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Save, FlaskConical } from 'lucide-react';
 import api from '../../services/api';
+import LoadingSpinner from '../LoadingSpinner';
 
 const FREQUENCIAS = ['', 'Diário', 'Semanal', 'Mensal', 'Ocasional', 'Ex-usuário'];
 
@@ -60,7 +61,7 @@ export default function TabSubstancias({ acolhidoId, podeEditar, toast }) {
     }
   };
 
-  if (loading) return <div className="card-p text-sm text-gray-400 text-center py-6">Carregando...</div>;
+  if (loading) return <div className="card-p"><LoadingSpinner /></div>;
 
   return (
     <div className="card-p space-y-4">

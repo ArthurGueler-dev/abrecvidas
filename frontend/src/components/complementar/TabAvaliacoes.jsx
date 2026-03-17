@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Pencil, Trash2, X, Save, ClipboardList } from 'lucide-react';
 import api from '../../services/api';
 import ModalConfirmacao from '../ModalConfirmacao';
+import LoadingSpinner from '../LoadingSpinner';
 
 const TIPOS = ['Psicológica', 'Social', 'Médica', 'Nutricional', 'Jurídica', 'Geral'];
 
@@ -129,7 +130,7 @@ export default function TabAvaliacoes({ acolhidoId, podeEditar, toast }) {
         </div>
       )}
 
-      {loading && <p className="text-sm text-gray-400 text-center py-4">Carregando...</p>}
+      {loading && <LoadingSpinner />}
 
       {!loading && lista.length === 0 && (
         <p className="text-sm text-gray-400 text-center py-6">Nenhuma avaliação registrada.</p>

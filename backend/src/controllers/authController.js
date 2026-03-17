@@ -125,4 +125,40 @@ const me = async (req, res, next) => {
   }
 };
 
-module.exports = { login, registrar, me };
+// PUT /api/auth/alterar-senha  (usuário autenticado)
+const alterarSenha = async (req, res, next) => {
+  try {
+    const { senha_atual, nova_senha } = req.body;
+
+    if (!senha_atual || !nova_senha) {
+      return res.status(400).json({ error: 'Senha atual e nova senha são obrigatórias' });
+    }
+
+    if (!validarSenha(nova_senha)) {
+      return res.status(400).json({ error: 'A nova senha deve ter no mínimo 8 caracteres' });
+    }
+
+    const [usuarios] = await pool.execute(
+      'SELECT senha_hash FROM usuarios WHERE id = ?',
+      [req.usuario.id]
+    );
+
+    if (usuarios.length === 0) {
+      return res.status(404).json({ error: 'Usuário não encontrado' });
+    }
+
+    const senhaValida = await bcrypt.compare(senha_atual, usuarios[0].senha_hash);
+    if (!senhaValida) {
+      return res.status(401).json({ error: 'Senha atual incorreta' });
+    }
+
+    const novoHash = await bcrypt.hash(nova_senha, 10);
+    await pool.execute('UPDATE usuarios SET senha_hash = ? WHERE id = ?', [novoHash, req.usuario.id]);
+
+    res.json({ message: 'Senha alterada com sucesso' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { login, registrar, me, alterarSenha };

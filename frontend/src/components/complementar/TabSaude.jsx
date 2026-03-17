@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Save, Heart } from 'lucide-react';
 import api from '../../services/api';
+import LoadingSpinner from '../LoadingSpinner';
 
 const TIPOS_SANGUINEOS = ['', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
@@ -68,7 +69,7 @@ export default function TabSaude({ acolhidoId, podeEditar, toast }) {
     }
   };
 
-  if (loading) return <div className="card-p text-sm text-gray-400 text-center py-6">Carregando...</div>;
+  if (loading) return <div className="card-p"><LoadingSpinner /></div>;
 
   return (
     <div className="card-p space-y-4">

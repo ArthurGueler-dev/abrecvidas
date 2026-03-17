@@ -13,7 +13,7 @@ const itensMenu = [
   { label: 'Evoluções',      href: '/evolucoes',   icone: ClipboardList,   perfis: ['admin','profissional'] },
   { label: 'Relatórios',     href: '/relatorios',  icone: FileText,        perfis: ['admin','profissional','visualizador'] },
   { label: 'Usuários',       href: '/usuarios',    icone: ShieldCheck,     perfis: ['admin'] },
-  { label: 'Configurações',  href: '/configuracoes', icone: Settings,      perfis: ['admin'] },
+  { label: 'Configurações',  href: '/configuracoes', icone: Settings,      perfis: ['admin', 'profissional', 'visualizador'] },
 ];
 
 export default function Sidebar({ aberta, onFechar }) {
