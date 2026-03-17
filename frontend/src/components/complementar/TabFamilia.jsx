@@ -9,6 +9,14 @@ const SITUACOES   = ['Vivo(a)', 'Falecido(a)', 'Desconhecido(a)'];
 
 const vazio = { nome: '', parentesco: 'Pai', idade: '', telefone: '', situacao: 'Vivo(a)', observacoes: '' };
 
+function formatarTelefoneInput(valor) {
+  const d = valor.replace(/\D/g, '').slice(0, 11);
+  if (d.length <= 2)  return d.length ? `(${d}` : '';
+  if (d.length <= 6)  return `(${d.slice(0,2)}) ${d.slice(2)}`;
+  if (d.length <= 10) return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;
+  return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;
+}
+
 function Linha({ label, valor }) {
   return (
     <div>
@@ -24,6 +32,7 @@ export default function TabFamilia({ acolhidoId, podeEditar, toast }) {
   const [form, setForm]       = useState(null);   // null = fechado | {} = novo | {id,...} = editar
   const [saving, setSaving]   = useState(false);
   const [confirmar, setConfirmar] = useState(null);
+  const [erros, setErros]         = useState({});
 
   const carregar = () => {
     setLoading(true);
@@ -35,11 +44,28 @@ export default function TabFamilia({ acolhidoId, podeEditar, toast }) {
 
   useEffect(() => { carregar(); }, [acolhidoId]);
 
-  const set = (campo) => (e) => setForm(prev => ({ ...prev, [campo]: e.target.value }));
+  const set = (campo) => (e) => {
+    let valor = e.target.value;
+    if (campo === 'telefone') valor = formatarTelefoneInput(valor);
+    setForm(prev => ({ ...prev, [campo]: valor }));
+  };
+
+  const validarIdade = (val) => {
+    if (val === '' || val === null || val === undefined) { setErros(p => ({ ...p, idade: null })); return; }
+    const n = parseInt(val, 10);
+    if (isNaN(n) || n < 0 || n > 120) {
+      setErros(p => ({ ...p, idade: 'Idade deve ser entre 0 e 120' }));
+    } else {
+      setErros(p => ({ ...p, idade: null }));
+    }
+  };
 
   const salvar = async () => {
     if (!form.nome || !form.parentesco) {
       toast('Nome e parentesco são obrigatórios', 'error'); return;
+    }
+    if (erros.idade) {
+      toast(erros.idade, 'error'); return;
     }
     setSaving(true);
     try {
@@ -77,7 +103,7 @@ export default function TabFamilia({ acolhidoId, podeEditar, toast }) {
           <h2 className="font-semibold text-gray-900 text-sm">Informações Familiares</h2>
         </div>
         {podeEditar && !form && (
-          <button className="btn btn-primary text-xs py-1.5" onClick={() => setForm({ ...vazio })}>
+          <button className="btn btn-primary text-xs py-1.5" onClick={() => { setForm({ ...vazio }); setErros({}); }}>
             <Plus size={14} /> Adicionar
           </button>
         )}
@@ -100,7 +126,15 @@ export default function TabFamilia({ acolhidoId, podeEditar, toast }) {
             </div>
             <div>
               <label className="label">Idade</label>
-              <input className="input" type="number" min="0" max="120" value={form.idade} onChange={set('idade')} placeholder="Ex: 45" />
+              <input
+                className={`input ${erros.idade ? 'border-red-400 focus:ring-red-300' : ''}`}
+                type="number" min="0" max="120"
+                value={form.idade}
+                onChange={set('idade')}
+                onBlur={(e) => validarIdade(e.target.value)}
+                placeholder="Ex: 45"
+              />
+              {erros.idade && <p className="text-xs text-red-500 mt-1">{erros.idade}</p>}
             </div>
             <div>
               <label className="label">Telefone</label>
@@ -145,7 +179,7 @@ export default function TabFamilia({ acolhidoId, podeEditar, toast }) {
               </div>
               {podeEditar && (
                 <div className="flex gap-1 shrink-0 ml-3">
-                  <button className="p-1.5 rounded hover:bg-blue-100 text-blue-600" onClick={() => setForm({ ...f })}>
+                  <button className="p-1.5 rounded hover:bg-blue-100 text-blue-600" onClick={() => { setForm({ ...f }); setErros({}); }}>
                     <Pencil size={14} />
                   </button>
                   <button className="p-1.5 rounded hover:bg-red-100 text-red-500" onClick={() => setConfirmar(f.id)}>
