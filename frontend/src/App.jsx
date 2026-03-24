@@ -10,6 +10,8 @@ import EditarAcolhidoPage from './pages/EditarAcolhidoPage';
 import DetalhesAcolhidoPage from './pages/DetalhesAcolhidoPage';
 import UsuariosPage from './pages/UsuariosPage';
 import ConfiguracoesPage from './pages/ConfiguracoesPage';
+import EvolucaosPage from './pages/EvolucaosPage';
+import RelatoriosPage from './pages/RelatoriosPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 const RotaProtegida = ({ children }) => {
@@ -41,8 +43,8 @@ function AppRoutes() {
       <Route path="/acolhidos/novo" element={<Pagina><NovoAcolhidoPage /></Pagina>} />
       <Route path="/acolhidos/:id" element={<Pagina><DetalhesAcolhidoPage /></Pagina>} />
       <Route path="/acolhidos/:id/editar" element={<Pagina><EditarAcolhidoPage /></Pagina>} />
-      <Route path="/evolucoes" element={<Pagina><div className="card-p"><h1 className="text-xl font-bold text-gray-900 mb-2">Evoluções</h1><p className="text-gray-500 text-sm">Disponível na Sprint 5.</p></div></Pagina>} />
-      <Route path="/relatorios" element={<Pagina><div className="card-p"><h1 className="text-xl font-bold text-gray-900 mb-2">Relatórios</h1><p className="text-gray-500 text-sm">Disponível na Sprint 7.</p></div></Pagina>} />
+      <Route path="/evolucoes" element={<Pagina><EvolucaosPage /></Pagina>} />
+      <Route path="/relatorios" element={<Pagina><RelatoriosPage /></Pagina>} />
       <Route path="/usuarios" element={<Pagina><UsuariosPage /></Pagina>} />
       <Route path="/configuracoes" element={<Pagina><ConfiguracoesPage /></Pagina>} />
       <Route path="/" element={<Navigate to="/dashboard" replace />} />

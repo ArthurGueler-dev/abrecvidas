@@ -21,6 +21,10 @@ const listarAcolhidos = async (req, res, next) => {
       params.push(`%${search}%`, `%${search}%`);
     }
 
+    const { data_de, data_ate } = req.query;
+    if (data_de)  { where += ' AND a.data_admissao >= ?'; params.push(data_de); }
+    if (data_ate) { where += ' AND a.data_admissao <= ?'; params.push(data_ate); }
+
     const [[{ total }]] = await pool.execute(
       `SELECT COUNT(*) as total FROM acolhidos a ${where}`,
       params

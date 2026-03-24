@@ -12,22 +12,12 @@ export default function DashboardPage() {
   const [stats, setStats] = useState({ total: '—', ativos: '—', alta: '—', mes: '—' });
 
   useEffect(() => {
-    const buscar = async () => {
-      try {
-        const [todos, ativos, alta] = await Promise.all([
-          api.get('/acolhidos?limit=1'),
-          api.get('/acolhidos?limit=1&status=ativo'),
-          api.get('/acolhidos?limit=1&status=alta'),
-        ]);
-        setStats({
-          total: todos.data.paginacao.total,
-          ativos: ativos.data.paginacao.total,
-          alta: alta.data.paginacao.total,
-          mes: '—',
-        });
-      } catch { /* mantém os dashes */ }
-    };
-    buscar();
+    api.get('/relatorios/estatisticas')
+      .then(({ data }) => {
+        const d = data.dados;
+        setStats({ total: d.total, ativos: d.ativos, alta: d.alta, mes: d.mes });
+      })
+      .catch(() => {});
   }, []);
 
   const statCards = [

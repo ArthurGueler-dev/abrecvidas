@@ -32,6 +32,8 @@ export default function AcolhidosPage() {
   const [loading, setLoading]         = useState(true);
   const [search, setSearch]           = useState('');
   const [status, setStatus]           = useState('');
+  const [dataDe, setDataDe]           = useState('');
+  const [dataAte, setDataAte]         = useState('');
   const [page, setPage]               = useState(1);
   const [deletando, setDeletando]     = useState(null);
   const [loadingDel, setLoadingDel]   = useState(false);
@@ -43,8 +45,10 @@ export default function AcolhidosPage() {
     setLoading(true);
     try {
       const params = new URLSearchParams({ page, limit: 10 });
-      if (search) params.set('search', search);
-      if (status) params.set('status', status);
+      if (search)  params.set('search', search);
+      if (status)  params.set('status', status);
+      if (dataDe)  params.set('data_de', dataDe);
+      if (dataAte) params.set('data_ate', dataAte);
       const { data } = await api.get(`/acolhidos?${params}`);
       setAcolhidos(data.dados);
       setPaginacao(data.paginacao);
@@ -53,7 +57,7 @@ export default function AcolhidosPage() {
     } finally {
       setLoading(false);
     }
-  }, [page, search, status]);
+  }, [page, search, status, dataDe, dataAte]);
 
   useEffect(() => { carregar(); }, [carregar]);
 
@@ -89,22 +93,37 @@ export default function AcolhidosPage() {
       </div>
 
       {/* Filtros */}
-      <div className="card-p flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-          <input
-            className="input pl-9"
-            placeholder="Buscar por nome ou CPF..."
-            value={search}
-            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-          />
+      <div className="card-p space-y-3">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              className="input pl-9"
+              placeholder="Buscar por nome ou CPF..."
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+            />
+          </div>
+          <select className="input sm:w-44" value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }}>
+            <option value="">Todos os status</option>
+            <option value="ativo">Ativo</option>
+            <option value="inativo">Inativo</option>
+            <option value="alta">Alta</option>
+          </select>
         </div>
-        <select className="input sm:w-44" value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }}>
-          <option value="">Todos os status</option>
-          <option value="ativo">Ativo</option>
-          <option value="inativo">Inativo</option>
-          <option value="alta">Alta</option>
-        </select>
+        <div className="flex flex-col sm:flex-row gap-3 items-center">
+          <span className="text-xs text-gray-400 shrink-0">Admissão:</span>
+          <div className="flex gap-2 flex-1">
+            <input className="input flex-1" type="date" value={dataDe}  title="Data de admissão — de" onChange={(e) => { setDataDe(e.target.value); setPage(1); }} />
+            <input className="input flex-1" type="date" value={dataAte} title="Data de admissão — até" onChange={(e) => { setDataAte(e.target.value); setPage(1); }} />
+          </div>
+          {(dataDe || dataAte) && (
+            <button className="text-xs text-gray-400 hover:text-red-500 transition-colors shrink-0"
+              onClick={() => { setDataDe(''); setDataAte(''); setPage(1); }}>
+              Limpar datas
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Tabela */}

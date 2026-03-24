@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowLeft, Pencil, User, Phone, MapPin, Upload,
-  Users, Heart, FlaskConical, Briefcase, ClipboardList,
+  Users, Heart, FlaskConical, Briefcase, ClipboardList, Activity,
 } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import ToastContainer from '../components/Toast';
 import { useToast } from '../hooks/useToast';
+import TabEvolucao from '../components/complementar/TabEvolucao';
 import TabFamilia from '../components/complementar/TabFamilia';
 import TabSaude from '../components/complementar/TabSaude';
 import TabSubstancias from '../components/complementar/TabSubstancias';
@@ -22,6 +23,7 @@ const STATUS_BADGE = {
 
 const TABS = [
   { id: 'dados',       label: 'Dados Pessoais',      icone: User },
+  { id: 'evolucao',    label: 'Evolução',             icone: Activity },
   { id: 'familia',     label: 'Família',              icone: Users },
   { id: 'saude',       label: 'Saúde',                icone: Heart },
   { id: 'substancias', label: 'Substâncias',          icone: FlaskConical },
@@ -221,6 +223,7 @@ export default function DetalhesAcolhidoPage() {
             </div>
           )}
 
+          {abaAtiva === 'evolucao'     && <TabEvolucao     acolhidoId={id} podeEditar={podeEditar} toast={toast} />}
           {abaAtiva === 'familia'      && <TabFamilia      acolhidoId={id} podeEditar={podeEditar} toast={toast} />}
           {abaAtiva === 'saude'        && <TabSaude        acolhidoId={id} podeEditar={podeEditar} toast={toast} />}
           {abaAtiva === 'substancias'  && <TabSubstancias  acolhidoId={id} podeEditar={podeEditar} toast={toast} />}
