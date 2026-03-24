@@ -42,6 +42,8 @@ router.delete('/:id', requirePerfil(['admin']), deletarAcolhido);
 router.post('/:id/foto',   upload.single('file'), uploadFotoAcolhido);
 router.delete('/:id/foto', deletarFotoAcolhido);
 
+const rw = requirePerfil(['admin', 'profissional']);
+
 // Sprint 5 — Evoluções
 router.get   ('/:id/evolucoes',                     listarEvolucoes);
 router.post  ('/:id/evolucoes',              rw,    criarEvolucao);
@@ -49,7 +51,6 @@ router.put   ('/:id/evolucoes/:evolucaoId',  rw,    atualizarEvolucao);
 router.delete('/:id/evolucoes/:evolucaoId',  rw,    deletarEvolucao);
 
 // Sprint 4 — Informações complementares
-const rw = requirePerfil(['admin', 'profissional']);
 
 router.get   ('/:id/familia',                  listarFamilia);
 router.post  ('/:id/familia',             rw,  criarFamiliar);
