@@ -3,6 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const errorHandler = require('./middleware/errorHandler');
+const { helmetMiddleware, limiteGeral, compressionMiddleware, sanitizarBody } = require('./middleware/security');
 
 const app = express();
 
@@ -12,6 +13,10 @@ const origensPermitidas = [
   'https://abrecvidas.vercel.app',
   process.env.FRONTEND_URL,
 ].filter(Boolean);
+
+app.use(helmetMiddleware);
+app.use(compressionMiddleware);
+app.use(limiteGeral);
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -24,8 +29,9 @@ app.use(cors({
   credentials: true,
 }));
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '2mb' }));
+app.use(express.urlencoded({ extended: true, limit: '2mb' }));
+app.use(sanitizarBody);
 
 // Health check
 app.get('/api/health', (req, res) => {

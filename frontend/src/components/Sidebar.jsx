@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Users, UserPlus, ClipboardList,
-  FileText, Settings, LogOut, ShieldCheck,
+  FileText, Settings, LogOut, ShieldCheck, HelpCircle,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -14,6 +14,7 @@ const itensMenu = [
   { label: 'Relatórios',     href: '/relatorios',  icone: FileText,        perfis: ['admin','profissional','visualizador'] },
   { label: 'Usuários',       href: '/usuarios',    icone: ShieldCheck,     perfis: ['admin'] },
   { label: 'Configurações',  href: '/configuracoes', icone: Settings,      perfis: ['admin', 'profissional', 'visualizador'] },
+  { label: 'Ajuda',          href: '/ajuda',         icone: HelpCircle,    perfis: ['admin', 'profissional', 'visualizador'] },
 ];
 
 export default function Sidebar({ aberta, onFechar }) {

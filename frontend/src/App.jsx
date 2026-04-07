@@ -12,6 +12,7 @@ import UsuariosPage from './pages/UsuariosPage';
 import ConfiguracoesPage from './pages/ConfiguracoesPage';
 import EvolucaosPage from './pages/EvolucaosPage';
 import RelatoriosPage from './pages/RelatoriosPage';
+import AjudaPage from './pages/AjudaPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 const RotaProtegida = ({ children }) => {
@@ -47,6 +48,7 @@ function AppRoutes() {
       <Route path="/relatorios" element={<Pagina><RelatoriosPage /></Pagina>} />
       <Route path="/usuarios" element={<Pagina><UsuariosPage /></Pagina>} />
       <Route path="/configuracoes" element={<Pagina><ConfiguracoesPage /></Pagina>} />
+      <Route path="/ajuda" element={<Pagina><AjudaPage /></Pagina>} />
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
