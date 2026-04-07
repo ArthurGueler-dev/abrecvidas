@@ -100,6 +100,12 @@ export default function FormAcolhido({ acolhido = null, onSubmit, loading, erros
     data_admissao: new Date().toISOString().split('T')[0],
   });
 
+  const [semMoradia, setSemMoradia] = useState(
+    acolhido
+      ? (!acolhido.endereco && !acolhido.cep && !acolhido.cidade && !acolhido.estado)
+      : false
+  );
+
   const [errosLocais, setErrosLocais] = useState({});
 
   const setErroLocal = (campo, msg) =>
@@ -174,6 +180,18 @@ export default function FormAcolhido({ acolhido = null, onSubmit, loading, erros
     : idade !== null && idade < 18
     ? `Menor de 18 anos — opções de estado civil limitadas`
     : null;
+
+  // ── Sem moradia ───────────────────────────────────────────────────────────
+
+  const toggleSemMoradia = () => {
+    setSemMoradia(prev => {
+      if (!prev) {
+        // ao marcar: limpa os campos de endereço
+        setDados(d => ({ ...d, endereco: '', cep: '', cidade: '', estado: '' }));
+      }
+      return !prev;
+    });
+  };
 
   // ── CEP ───────────────────────────────────────────────────────────────────
 
@@ -318,24 +336,45 @@ export default function FormAcolhido({ acolhido = null, onSubmit, loading, erros
 
       {/* Endereço */}
       <div className="card-p">
-        <h2 className="font-semibold text-gray-900 mb-5 pb-3 border-b border-gray-100">Endereço</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Campo label="CEP">
-            <input className="input" value={dados.cep} onChange={set('cep')} onBlur={buscarCEP} placeholder="00000-000" />
-          </Campo>
-          <Campo label="Endereço">
-            <input className="input" value={dados.endereco} onChange={set('endereco')} placeholder="Rua, número, bairro" />
-          </Campo>
-          <Campo label="Cidade">
-            <input className="input" value={dados.cidade} onChange={set('cidade')} placeholder="Cidade" />
-          </Campo>
-          <Campo label="Estado">
-            <select className="input" value={dados.estado} onChange={set('estado')}>
-              <option value="">Selecione</option>
-              {ESTADOS.map((uf) => <option key={uf} value={uf}>{uf}</option>)}
-            </select>
-          </Campo>
+        <div className="flex items-center justify-between mb-5 pb-3 border-b border-gray-100">
+          <h2 className="font-semibold text-gray-900">Endereço</h2>
+          <label className="flex items-center gap-2 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={semMoradia}
+              onChange={toggleSemMoradia}
+              className="w-4 h-4 rounded accent-red-500 cursor-pointer"
+            />
+            <span className="text-sm font-medium text-red-600">Sem moradia fixa</span>
+          </label>
         </div>
+
+        {semMoradia ? (
+          <div className="flex items-center gap-3 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+            <span className="text-red-500 text-lg">🏠</span>
+            <p className="text-sm text-red-700 font-medium">
+              Acolhido sem moradia fixa — campos de endereço não serão preenchidos.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <Campo label="CEP">
+              <input className="input" value={dados.cep} onChange={set('cep')} onBlur={buscarCEP} placeholder="00000-000" />
+            </Campo>
+            <Campo label="Endereço">
+              <input className="input" value={dados.endereco} onChange={set('endereco')} placeholder="Rua, número, bairro" />
+            </Campo>
+            <Campo label="Cidade">
+              <input className="input" value={dados.cidade} onChange={set('cidade')} placeholder="Cidade" />
+            </Campo>
+            <Campo label="Estado">
+              <select className="input" value={dados.estado} onChange={set('estado')}>
+                <option value="">Selecione</option>
+                {ESTADOS.map((uf) => <option key={uf} value={uf}>{uf}</option>)}
+              </select>
+            </Campo>
+          </div>
+        )}
       </div>
 
       {/* Internação */}
