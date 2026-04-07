@@ -41,11 +41,11 @@ const secoes = [
       },
       {
         pergunta: 'O sistema valida o CPF automaticamente?',
-        resposta: 'Sim. Ao sair do campo CPF, o sistema verifica os dígitos verificadores em tempo real e exibe um erro imediato caso seja inválido. O CPF também é verificado no servidor para evitar duplicatas.',
+        resposta: 'Sim. Ao sair do campo CPF, o sistema verifica os dígitos verificadores em tempo real e exibe um aviso imediato caso seja inválido. O CPF também é verificado para evitar cadastros duplicados.',
       },
       {
         pergunta: 'Como adicionar foto ao acolhido?',
-        resposta: 'Na tela de detalhes do acolhido, clique no ícone de câmera sobre a foto. Selecione uma imagem (JPG, PNG ou WEBP, máximo 5MB). A foto é salva automaticamente na nuvem (Cloudinary).',
+        resposta: 'Na tela de detalhes do acolhido, clique no ícone de câmera sobre a foto. Selecione uma imagem do seu computador (formatos JPG, PNG, máximo 5MB). A foto é salva automaticamente.',
       },
       {
         pergunta: 'Como buscar um acolhido?',
@@ -124,16 +124,16 @@ const secoes = [
     bg: 'bg-indigo-50',
     itens: [
       {
-        pergunta: 'Como criar um novo usuário? (somente admin)',
-        resposta: 'Acesse o menu "Usuários". Clique em "Novo Usuário", preencha nome, e-mail, perfil e senha. O novo usuário já poderá fazer login imediatamente.',
+        pergunta: 'Como criar um novo usuário? (somente administrador)',
+        resposta: 'Acesse o menu "Usuários". Clique em "Novo Usuário", preencha nome, e-mail, tipo de acesso e senha. O novo usuário já poderá entrar no sistema imediatamente.',
       },
       {
         pergunta: 'Como desativar um usuário?',
         resposta: 'Na página de Usuários, clique no ícone de ativar/desativar ao lado do usuário. Usuários inativos não conseguem fazer login, mas seus dados históricos são preservados.',
       },
       {
-        pergunta: 'Um admin pode se desativar?',
-        resposta: 'Não. O sistema impede que um admin desative sua própria conta, garantindo que sempre haja ao menos um administrador ativo.',
+        pergunta: 'Um administrador pode desativar a própria conta?',
+        resposta: 'Não. O sistema não permite isso, garantindo que sempre haja ao menos um responsável com acesso total ao sistema.',
       },
     ],
   },
@@ -145,19 +145,19 @@ const secoes = [
     itens: [
       {
         pergunta: 'O sistema demorou para responder na primeira vez.',
-        resposta: 'O servidor backend fica em modo de espera após 15 minutos sem uso (plano gratuito do Render). A primeira requisição após esse período pode demorar até 30 segundos para "acordar" o servidor. É normal.',
-      },
-      {
-        pergunta: 'Salvei um dado mas ele sumiu.',
-        resposta: 'Verifique se o campo RUN_MIGRATIONS foi removido das variáveis de ambiente do Render. Caso ainda esteja presente, remova-o imediatamente — ele pode causar recriação das tabelas a cada reinicialização.',
+        resposta: 'Quando ninguém usa o sistema por mais de 15 minutos, ele entra em modo de economia. A primeira vez que alguém acessa depois disso pode demorar até 30 segundos para carregar. Isso é normal — basta aguardar.',
       },
       {
         pergunta: 'A foto não aparece corretamente.',
-        resposta: 'Certifique-se de que o arquivo é uma imagem válida (JPG, PNG ou WEBP) com no máximo 5MB. Após o upload, aguarde alguns segundos para a imagem ser processada pelo Cloudinary.',
+        resposta: 'Verifique se o arquivo escolhido é uma imagem (JPG ou PNG) com no máximo 5MB. Após enviar, aguarde alguns segundos para a foto aparecer. Se o problema persistir, tente fazer login novamente.',
       },
       {
         pergunta: 'O PDF não foi gerado ou está em branco.',
-        resposta: 'Tente novamente após alguns segundos. Se persistir, verifique se o acolhido possui dados preenchidos nas abas complementares. O PDF é gerado inteiramente no navegador.',
+        resposta: 'Tente novamente após alguns segundos. Verifique se o acolhido possui informações preenchidas nas abas antes de gerar o PDF. Se o problema continuar, tente usar outro navegador (Google Chrome ou Microsoft Edge).',
+      },
+      {
+        pergunta: 'Não consigo fazer login.',
+        resposta: 'Verifique se o e-mail e a senha estão corretos. Lembre-se que a senha diferencia letras maiúsculas de minúsculas. Após 20 tentativas incorretas, o acesso é bloqueado por 15 minutos como medida de segurança. Contate o administrador se precisar de ajuda.',
       },
     ],
   },
@@ -218,7 +218,7 @@ export default function AjudaPage() {
       <div className="flex items-start gap-3 bg-teal-50 border border-teal-200 rounded-xl px-4 py-3">
         <CheckCircle size={16} className="text-teal-600 mt-0.5 shrink-0" />
         <p className="text-sm text-teal-800">
-          <strong>Sistema em produção.</strong> Acesso via HTTPS, dados protegidos e backups automáticos pelo banco de dados Aiven (MySQL 8).
+          <strong>Sistema ativo e seguro.</strong> Acesso protegido, dados salvos com segurança na nuvem e cópias de segurança automáticas diárias.
         </p>
       </div>
 
